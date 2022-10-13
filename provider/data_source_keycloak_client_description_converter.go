@@ -2,8 +2,10 @@ package provider
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/mitchellh/mapstructure"
 	"github.com/mrparkers/terraform-provider-keycloak/keycloak"
 )
 
@@ -220,7 +222,7 @@ func setClientDescriptionConverterData(data *schema.ResourceData, description *k
 	data.Set("optional_client_scopes", description.OptionalClientScopes)
 	data.Set("origin", description.Origin)
 	data.Set("protocol", description.Protocol)
-	data.Set("protocol_mappers", description.ProtocolMappers)
+	data.Set("protocol_mappers", convertProtocolMappers(description.ProtocolMappers))
 	data.Set("public_client", description.PublicClient)
 	data.Set("redirect_uris", description.RedirectUris)
 	data.Set("registered_nodes", description.RegisteredNodes)
@@ -248,4 +250,18 @@ func dataSourceKeycloakClientDescriptionConverterRead(ctx context.Context, data 
 	setClientDescriptionConverterData(data, description)
 
 	return nil
+}
+
+func convertProtocolMappers(mappers []*keycloak.GenericProtocolMapper) []map[string]interface{} {
+	result := []map[string]interface{}{}
+
+	for _, mapper := range mappers {
+		var m map[string]interface{}
+		if err := mapstructure.Decode(mapper, &m); err != nil {
+			continue
+		}
+		result = append(result, m)
+	}
+
+	return result
 }

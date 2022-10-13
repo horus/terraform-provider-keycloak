@@ -6,14 +6,14 @@ import (
 )
 
 type GenericProtocolMapper struct {
-	ClientId       string            `json:"-"`
-	ClientScopeId  string            `json:"-"`
-	Config         map[string]string `json:"config"`
-	Id             string            `json:"id,omitempty"`
-	Name           string            `json:"name"`
-	Protocol       string            `json:"protocol"`
-	ProtocolMapper string            `json:"protocolMapper"`
-	RealmId        string            `json:"-"`
+	ClientId       string            `json:"-" mapstructure:"-"`
+	ClientScopeId  string            `json:"-" mapstructure:"-"`
+	Config         map[string]string `json:"config" mapstructure:"config"`
+	Id             string            `json:"id,omitempty" mapstructure:"id,omitempty"`
+	Name           string            `json:"name" mapstructure:"name"`
+	Protocol       string            `json:"protocol" mapstructure:"protocol"`
+	ProtocolMapper string            `json:"protocolMapper" mapstructure:"protocol_mapper"`
+	RealmId        string            `json:"-" mapstructure:"-"`
 }
 
 type OpenidClientWithGenericProtocolMappers struct {
